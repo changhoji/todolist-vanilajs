@@ -39,6 +39,9 @@ body {
     height: 30rem;
     overflow-y: scroll;
 }
+.tasks::-webkit-scrollbar {
+    display: none;
+}
 
 .new-task-container {
     border-radius: 0.4rem;
@@ -66,11 +69,19 @@ body {
     display: flex;
 }
 
-.task-check {
-    border: 0;
+.task-name {
+    width: 15.6rem;
+}
+
+.task-button {
     margin: 0.3rem;
 
     border-radius: 0.2rem;
+    width: 1.2rem;
+}
+
+.task-button:hover {
+    cursor: pointer;
 }
 
 #new-task-input {

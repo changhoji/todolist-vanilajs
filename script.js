@@ -27,13 +27,22 @@ function addTask() {
     let taskName = document.createElement("p");
     taskName.className = "task-name";
     taskName.appendChild(document.createTextNode(newTaskName));
-
-    let checkBtn = document.createElement("button"); //완료(체크) 버튼
-    checkBtn.className = "task-check";
-    checkBtn.appendChild(document.createTextNode("완료!"));
-
     task.appendChild(taskName);
+
+    let checkBtn = document.createElement("img"); //완료(체크) 버튼
+    checkBtn.className = "task-check task-button";
+    checkBtn.setAttribute("src", "./svg/check-square.svg");
     task.appendChild(checkBtn);
+
+    let editBtn = document.createElement("img");
+    editBtn.className = "task-edit task-button";
+    editBtn.setAttribute("src", "./svg/pencil-square.svg");
+    task.appendChild(editBtn);
+
+    let removeBtn = document.createElement("img");
+    removeBtn.className = "task-remove task-button";
+    removeBtn.setAttribute("src", "./svg/x-square.svg");
+    task.appendChild(removeBtn);
 
     checkBtn.addEventListener("click", () => {
         taskName.style.textDecoration = "line-through";
