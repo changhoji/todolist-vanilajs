@@ -3,6 +3,8 @@ const ntc = document.querySelector(".new-task-container");
 
 const taskList = document.querySelector(".tasks");
 
+let cnt = 0;
+
 newTaskInput.onfocus = (e) => {
     const focusColor = "#CCD0E5";
     ntc.style.backgroundColor = focusColor;
@@ -15,6 +17,7 @@ newTaskInput.onblur = (e) => {
 };
 
 /**
+ *
  * 새로운 todo 항목 추가하는 함수
  */
 function addTask() {
@@ -25,6 +28,7 @@ function addTask() {
 
     let task = document.createElement("div"); //task이름
     task.className = "task";
+    task.setAttribute("data-timestamp", cnt++);
 
     let taskName = document.createElement("p");
     taskName.className = "task-name";
@@ -47,22 +51,43 @@ function addTask() {
     task.appendChild(removeBtn);
 
     checkBtn.addEventListener("click", () => {
+        const tasks = taskList.childNodes;
         if (checkBtn.classList.contains("unchecked")) {
             task.style.backgroundColor = "#B0B9C6";
-
             checkBtn.setAttribute("src", "./svg/check-square-fill.svg");
-            checkBtn.className = checkBtn.className.replace(
-                "unchecked",
-                "checked"
-            );
+
+            let i;
+            for (i = 0; i < tasks.length; i++) {
+                if (
+                    tasks[i].childNodes[1].classList.contains("checked") &&
+                    tasks[i].dataset.timestamp < task.dataset.timestamp
+                )
+                    break;
+            }
+            if (i === tasks.length) taskList.insertBefore(task, null);
+            else taskList.insertBefore(task, tasks[i]);
+
+            checkBtn.classList.replace("unchecked", "checked");
         } else {
             task.style.backgroundColor = "";
-
             checkBtn.setAttribute("src", "./svg/check-square.svg");
-            checkBtn.className = checkBtn.className.replace(
-                "checked",
-                "unchecked"
-            );
+
+            let i;
+            for (i = 0; i < tasks.length; i++) {
+                console.log(
+                    "i = " + i + ", timestamp = " + tasks[i].dataset.timestamp
+                );
+                if (
+                    tasks[i].childNodes[1].classList.contains("checked") ||
+                    tasks[i].dataset.timestamp <= task.dataset.timestamp
+                )
+                    break;
+            }
+            console.log();
+            if (i === tasks.length) taskList.insertBefore(task, null);
+            else taskList.insertBefore(task, tasks[i]);
+
+            checkBtn.classList.replace("checked", "unchecked");
         }
     });
 
@@ -70,5 +95,5 @@ function addTask() {
         task.remove();
     });
 
-    taskList.appendChild(task);
+    taskList.prepend(task);
 }
