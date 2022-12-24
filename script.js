@@ -4,7 +4,7 @@ const ntc = document.querySelector(".new-task-container");
 const taskList = document.querySelector(".tasks");
 
 newTaskInput.onfocus = (e) => {
-    const focusColor = "lightblue";
+    const focusColor = "#CCD0E5";
     ntc.style.backgroundColor = focusColor;
     newTaskInput.style.backgroundColor = focusColor;
 };
@@ -51,15 +51,19 @@ function addTask() {
             task.style.backgroundColor = "#B0B9C6";
 
             checkBtn.setAttribute("src", "./svg/check-square-fill.svg");
-            checkBtn.className = checkBtn.className.replace("unchecked", "checked");
-        }
-        else {
+            checkBtn.className = checkBtn.className.replace(
+                "unchecked",
+                "checked"
+            );
+        } else {
             task.style.backgroundColor = "";
-            
+
             checkBtn.setAttribute("src", "./svg/check-square.svg");
-            checkBtn.className = checkBtn.className.replace("checked", "unchecked");
+            checkBtn.className = checkBtn.className.replace(
+                "checked",
+                "unchecked"
+            );
         }
-        
     });
 
     removeBtn.addEventListener("click", () => {

@@ -119,6 +119,10 @@ body {
     bottom: 0.17rem;
 }
 
+#new-task-icon:hover {
+    cursor: pointer;
+}
+
 footer {
     margin-top: 1rem;
 }
