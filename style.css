@@ -67,6 +67,8 @@ body {
     border-radius: 0.3rem;
 
     display: flex;
+
+    transition: all ease 0.5s;
 }
 
 .task-name {

@@ -19,7 +19,9 @@ newTaskInput.onblur = (e) => {
  */
 function addTask() {
     let newTaskName = newTaskInput.value;
+
     newTaskInput.value = "";
+    if (newTaskName === "") return;
 
     let task = document.createElement("div"); //task이름
     task.className = "task";
@@ -30,7 +32,7 @@ function addTask() {
     task.appendChild(taskName);
 
     let checkBtn = document.createElement("img"); //완료(체크) 버튼
-    checkBtn.className = "task-check task-button";
+    checkBtn.className = "task-check task-button unchecked";
     checkBtn.setAttribute("src", "./svg/check-square.svg");
     task.appendChild(checkBtn);
 
@@ -45,7 +47,23 @@ function addTask() {
     task.appendChild(removeBtn);
 
     checkBtn.addEventListener("click", () => {
-        taskName.style.textDecoration = "line-through";
+        if (checkBtn.classList.contains("unchecked")) {
+            task.style.backgroundColor = "#B0B9C6";
+
+            checkBtn.setAttribute("src", "./svg/check-square-fill.svg");
+            checkBtn.className = checkBtn.className.replace("unchecked", "checked");
+        }
+        else {
+            task.style.backgroundColor = "";
+            
+            checkBtn.setAttribute("src", "./svg/check-square.svg");
+            checkBtn.className = checkBtn.className.replace("checked", "unchecked");
+        }
+        
+    });
+
+    removeBtn.addEventListener("click", () => {
+        task.remove();
     });
 
     taskList.appendChild(task);
