@@ -52,7 +52,7 @@ function addTask() {
     let editInput = document.createElement("input");
     editInput.setAttribute("type", "text");
     editInput.className = "task-edit-input";
-    task.appendChild(editInput);
+    task.prepend(editInput);
 
     //remove button
     let removeBtn = document.createElement("img");
@@ -62,7 +62,7 @@ function addTask() {
 
     //when click "check"
     checkBtn.addEventListener("click", () => {
-        if (editInput.style.display != "none") return;
+        if (editInput.style.display === "inline") return;
         const tasks = taskList.childNodes;
         if (checkBtn.classList.contains("unchecked")) {
             task.style.backgroundColor = "#B0B9C6";
@@ -86,16 +86,12 @@ function addTask() {
 
             let i;
             for (i = 0; i < tasks.length; i++) {
-                console.log(
-                    "i = " + i + ", timestamp = " + tasks[i].dataset.timestamp
-                );
                 if (
                     tasks[i].childNodes[1].classList.contains("checked") ||
                     tasks[i].dataset.timestamp <= task.dataset.timestamp
                 )
                     break;
             }
-            console.log();
             if (i === tasks.length) taskList.insertBefore(task, null);
             else taskList.insertBefore(task, tasks[i]);
 
@@ -123,13 +119,12 @@ function addTask() {
 
             const newTaskName = editInput.value;
             editInput.value = "";
-            if (newTaskName === "") {
-                taskName.style.display = "";
+            if (newTaskName !== "") {
+                taskName.innerHTML = newTaskName;
             }
 
             editInput.style.display = "none";
             taskName.style.display = "";
-            taskName.innerHTML = newTaskName;
         }
 
         //add input element's eventlisteners
@@ -140,7 +135,7 @@ function addTask() {
             doEditTask(e);
         });
 
-        task.prepend(editInput);
+        editInput.focus();
     });
 
     //when click "remove"
