@@ -10,6 +10,11 @@ body {
     min-width: 27rem;
 }
 
+input[type="text"] {
+    outline: none;
+    border: none;
+}
+
 .entire-container {
     display: flex;
     flex-direction: column;
@@ -60,7 +65,6 @@ body {
     margin-bottom: 0.5rem;
     /* padding: 0.8rem; */
     line-height: 2.5rem;
-    padding-left: 1rem;
 
     background-color: white;
     height: 2.5rem;
@@ -72,7 +76,17 @@ body {
 }
 
 .task-name {
+    margin-left: 1rem;
     width: 15.6rem;
+}
+
+.task-edit-input {
+    display: none;
+    width: 16.2rem;
+    padding: 1rem;
+
+    margin: 0.2rem;
+    border-radius: 0.25rem;
 }
 
 .task-button {
