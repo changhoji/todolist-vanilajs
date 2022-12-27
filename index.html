@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <title>Simple ToDoList</title>
+        <meta name="description" content="" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="style.css" />
+        <script type="text/javascript" src="script.js" defer></script>
+    </head>
+    <body>
+        <div class="entire-container">
+            <header>
+                <div class="header-container">Simple ToDoList</div>
+            </header>
+            <main>
+                <div class="main-container">
+                    <div class="tasks"></div>
+                    <div class="new-task-container">
+                        <label
+                            for="new-task-input"
+                            id="new-task-icon"
+                            onclick="{addTask()}"
+                            >+</label
+                        >
+                        <input
+                            type="text"
+                            name="new-task"
+                            id="new-task-input"
+                            placeholder="type new task"
+                            onkeyup="if(window.event.keyCode==13){addTask()}"
+                        />
+                    </div>
+                </div>
+            </main>
+            <footer>
+                <div class="footer-container">by changhoji</div>
+            </footer>
+        </div>
+    </body>
+</html>
