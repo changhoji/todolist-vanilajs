@@ -1,3 +1,5 @@
+require("notedv").config();
+
 const newTaskInput = document.querySelector("#new-task-input");
 const ntc = document.querySelector(".new-task-container");
 
@@ -21,6 +23,7 @@ newTaskInput.onblur = (e) => {
  * 새로운 todo 항목 추가하는 함수
  */
 function addTask() {
+    alert(process.env.DB_HOST);
     let newTaskName = newTaskInput.value;
 
     newTaskInput.value = "";
