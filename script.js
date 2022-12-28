@@ -1,9 +1,9 @@
-require("notedv").config();
-
 const newTaskInput = document.querySelector("#new-task-input");
 const ntc = document.querySelector(".new-task-container");
-
 const taskList = document.querySelector(".tasks");
+
+let savedTasks = [];
+const taskLocalStorage = "tasks";
 
 let cnt = 0;
 
@@ -18,17 +18,47 @@ newTaskInput.onblur = (e) => {
     newTaskInput.style.backgroundColor = "";
 };
 
+function saveTasks() {
+    console.log("save!");
+    localStorage.setItem("tasks", JSON.stringify(savedTasks));
+}
+
+function loadTasks() {
+    const loadedTasks = localStorage.getItem(taskLocalStorage);
+    console.log(loadedTasks);
+    if (loadedTasks !== null) {
+        savedTasks = JSON.parse(loadedTasks);
+        savedTasks.forEach((nowTask) => {
+            addTask(nowTask.text);
+        });
+    }
+}
+
+loadTasks();
+
 /**
  *
- * 새로운 todo 항목 추가하는 함수
+ * index.html에서 정보를 입력받아 savedTasks에 추가하고 addTask() 실행
  */
-function addTask() {
-    alert(process.env.DB_HOST);
-    let newTaskName = newTaskInput.value;
-
+function inputNewTask() {
+    const newTaskName = newTaskInput.value;
     newTaskInput.value = "";
     if (newTaskName === "") return;
 
+    const newTask = {
+        text: newTaskName,
+    };
+
+    savedTasks.push(newTask);
+    saveTasks();
+    addTask(newTaskName);
+}
+
+/**
+ *
+ * html에 todo 항목 추가하는 함수
+ */
+function addTask(newTaskName) {
     let task = document.createElement("div"); //task이름
     task.className = "task";
     task.setAttribute("data-timestamp", cnt++);
@@ -147,4 +177,11 @@ function addTask() {
     });
 
     taskList.prepend(task);
+
+    //localstorage에 저장
+}
+
+function clearStorage() {
+    console.log("cleared");
+    window.localStorage.clear();
 }
