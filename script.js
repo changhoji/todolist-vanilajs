@@ -25,11 +25,11 @@ function saveTasks() {
 
 function loadTasks() {
     const loadedTasks = localStorage.getItem(taskLocalStorage);
-    console.log(loadedTasks);
+    console.log("load: " + loadedTasks);
     if (loadedTasks !== null) {
         savedTasks = JSON.parse(loadedTasks);
-        savedTasks.forEach((nowTask) => {
-            addTask(nowTask.text);
+        savedTasks.forEach((taskObj) => {
+            addTask(taskObj);
         });
     }
 }
@@ -45,28 +45,30 @@ function inputNewTask() {
     newTaskInput.value = "";
     if (newTaskName === "") return;
 
-    const newTask = {
-        text: newTaskName,
+    let newTask = {
+        taskName: newTaskName,
+        timestamp: Date(),
     };
 
     savedTasks.push(newTask);
     saveTasks();
-    addTask(newTaskName);
+    addTask(newTask);
 }
 
 /**
  *
  * html에 todo 항목 추가하는 함수
  */
-function addTask(newTaskName) {
+function addTask(taskObj) {
+    console.log("add: " + taskObj);
     let task = document.createElement("div"); //task이름
     task.className = "task";
-    task.setAttribute("data-timestamp", cnt++);
+    task.setAttribute("data-timestamp", taskObj.timestamp);
 
     //taskname
     let taskName = document.createElement("p");
     taskName.className = "task-name";
-    taskName.appendChild(document.createTextNode(newTaskName));
+    taskName.appendChild(document.createTextNode(taskObj.taskName));
     task.appendChild(taskName);
 
     //check button
