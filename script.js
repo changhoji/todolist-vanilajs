@@ -20,7 +20,6 @@ newTaskInput.onblur = (e) => {
 };
 
 function saveTasks() {
-    console.log("save!");
     localStorage.setItem(timestampLocalStorage, JSON.stringify(lastTimestamp));
     localStorage.setItem("tasks", JSON.stringify(savedTasks));
 }
@@ -32,7 +31,6 @@ function loadLocalStorage() {
     }
 
     const loadedTasks = localStorage.getItem(taskLocalStorage);
-    console.log("load: " + loadedTasks);
     if (loadedTasks !== null) {
         savedTasks = JSON.parse(loadedTasks);
         savedTasks.forEach((taskObj) => {
@@ -55,6 +53,7 @@ function inputNewTask() {
     let newTask = {
         taskName: newTaskName,
         timestamp: ++lastTimestamp,
+        check: "unchecked",
     };
 
     savedTasks.push(newTask);
@@ -67,7 +66,6 @@ function inputNewTask() {
  * html에 todo 항목 추가하는 함수
  */
 function addTask(taskObj) {
-    console.log("add: " + taskObj);
     let task = document.createElement("div"); //task이름
     task.className = "task";
     task.setAttribute("data-timestamp", taskObj.timestamp);
@@ -80,9 +78,17 @@ function addTask(taskObj) {
 
     //check button
     let checkBtn = document.createElement("img"); //완료(체크) 버튼
-    checkBtn.className = "task-check task-button unchecked";
-    checkBtn.setAttribute("src", "./svg/check-square.svg");
+    checkBtn.className = "task-check task-button " + taskObj.check;
+    checkBtn.setAttribute(
+        "src",
+        taskObj.check === "unchecked"
+            ? "./svg/check-square.svg"
+            : "./svg/check-square-fill.svg"
+    );
     task.appendChild(checkBtn);
+    if (taskObj.check === "checked") {
+        task.style.backgroundColor = "#B0B9C6";
+    }
 
     //edit button
     let editBtn = document.createElement("img");
@@ -110,35 +116,32 @@ function addTask(taskObj) {
             task.style.backgroundColor = "#B0B9C6";
             checkBtn.setAttribute("src", "./svg/check-square-fill.svg");
 
-            let i;
-            for (i = 0; i < tasks.length; i++) {
-                if (
-                    tasks[i].childNodes[1].classList.contains("checked") &&
-                    tasks[i].dataset.timestamp < task.dataset.timestamp
-                )
-                    break;
-            }
-            if (i === tasks.length) taskList.insertBefore(task, null);
-            else taskList.insertBefore(task, tasks[i]);
-
             checkBtn.classList.replace("unchecked", "checked");
+
+            placeTask(taskList, tasks, task, "checked");
+
+            const toEditTimestamp = Number(task.dataset.timestamp);
+            for (let i = 0; i < savedTasks.length; i++) {
+                if (toEditTimestamp === savedTasks[i].timestamp) {
+                    savedTasks[i].check = "checked";
+                }
+            }
         } else {
             task.style.backgroundColor = "";
             checkBtn.setAttribute("src", "./svg/check-square.svg");
 
-            let i;
-            for (i = 0; i < tasks.length; i++) {
-                if (
-                    tasks[i].childNodes[1].classList.contains("checked") ||
-                    tasks[i].dataset.timestamp <= task.dataset.timestamp
-                )
-                    break;
-            }
-            if (i === tasks.length) taskList.insertBefore(task, null);
-            else taskList.insertBefore(task, tasks[i]);
-
             checkBtn.classList.replace("checked", "unchecked");
+
+            placeTask(taskList, tasks, task, "unchecked");
+
+            const toEditTimestamp = Number(task.dataset.timestamp);
+            for (let i = 0; i < savedTasks.length; i++) {
+                if (toEditTimestamp === savedTasks[i].timestamp) {
+                    savedTasks[i].check = "unchecked";
+                }
+            }
         }
+        saveTasks();
     });
 
     //when click "edit"
@@ -163,6 +166,16 @@ function addTask(taskObj) {
             editInput.value = "";
             if (newTaskName !== "") {
                 taskName.innerHTML = newTaskName;
+
+                //reflect to localStorage
+                const toEditTimestamp = Number(task.dataset.timestamp);
+                for (let i = 0; i < savedTasks.length; i++) {
+                    if (toEditTimestamp === savedTasks[i].timestamp) {
+                        savedTasks[i].taskName = newTaskName;
+                        break;
+                    }
+                }
+                saveTasks();
             }
 
             editInput.style.display = "none";
@@ -182,10 +195,19 @@ function addTask(taskObj) {
 
     //when click "remove"
     removeBtn.addEventListener("click", () => {
+        const toDeleteTimestamp = Number(task.dataset.timestamp);
+        for (let i = 0; i < savedTasks.length; i++) {
+            if (savedTasks[i].timestamp === toDeleteTimestamp) {
+                savedTasks.splice(i, 1);
+                i--;
+            }
+        }
         task.remove();
+        saveTasks();
     });
 
-    taskList.prepend(task);
+    //taskList.prepend(task); -> placeTask()로 대체..!
+    placeTask(taskList, taskList.childNodes, task, taskObj.check);
 
     //localstorage에 저장
 }
@@ -193,4 +215,41 @@ function addTask(taskObj) {
 function clearStorage() {
     console.log("cleared");
     window.localStorage.clear();
+    location.reload();
+}
+
+function placeTask(taskList, tasks, task, check) {
+    console.log("task = " + task.dataset.timestamp + ", check = " + check);
+    let i = 0;
+
+    if (check === "unchecked") {
+        for (i = 0; i < tasks.length; i++) {
+            const checkBtnOfTask = tasks[i].querySelector(".task-check");
+            if (
+                checkBtnOfTask.classList.contains("checked") ||
+                tasks[i].dataset.timestamp < task.dataset.timestamp
+            )
+                break;
+        }
+        console.log("i = " + i);
+        if (i === tasks.length) taskList.insertBefore(task, null);
+        else {
+            taskList.insertBefore(task, tasks[i]);
+        }
+    } else {
+        //checked인 task는 checked가 있는 영역에, 그리고 timestamp 검사
+        for (i = 0; i < tasks.length; i++) {
+            const checkBtnOfTask = tasks[i].querySelector(".task-check");
+            if (
+                checkBtnOfTask.classList.contains("checked") &&
+                tasks[i].dataset.timestamp < task.dataset.timestamp
+            )
+                break;
+        }
+        console.log("i = " + i);
+        if (i === tasks.length) taskList.insertBefore(task, null);
+        else {
+            taskList.insertBefore(task, tasks[i]);
+        }
+    }
 }

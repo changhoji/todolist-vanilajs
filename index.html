@@ -5,7 +5,10 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <title>Simple ToDoList</title>
         <meta name="description" content="" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, minimum-scale=1.0"
+        />
         <link rel="stylesheet" href="style.css" />
         <script type="text/javascript" src="script.js" defer></script>
     </head>
@@ -17,20 +20,30 @@
             <main>
                 <div class="main-container">
                     <div class="tasks"></div>
-                    <div class="new-task-container">
-                        <label
-                            for="new-task-input"
-                            id="new-task-icon"
-                            onclick="{inputNewTask()}"
-                            >+</label
-                        >
-                        <input
-                            type="text"
-                            name="new-task"
-                            id="new-task-input"
-                            placeholder="type new task"
-                            onkeyup="if(window.event.keyCode==13){inputNewTask()}"
-                        />
+                    <div class="main-bottom-container">
+                        <div class="new-task-container">
+                            <label
+                                for="new-task-input"
+                                id="new-task-icon"
+                                onclick="{inputNewTask()}"
+                                >+</label
+                            >
+                            <input
+                                type="text"
+                                name="new-task"
+                                id="new-task-input"
+                                placeholder="type new task"
+                                onkeyup="if(window.event.keyCode==13){inputNewTask()}"
+                            />
+                        </div>
+                        <div class="reset-button-container">
+                            <button
+                                onclick="{clearStorage()}"
+                                id="reset-button"
+                            >
+                                reset
+                            </button>
+                        </div>
                     </div>
                 </div>
             </main>

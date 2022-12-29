@@ -3,6 +3,7 @@
     border-collapse: collapse;
     margin: 0;
     padding: 0;
+    font-size: 1rem;
 }
 
 body {
@@ -48,19 +49,6 @@ input[type="text"] {
     display: none;
 }
 
-.new-task-container {
-    border-radius: 0.4rem;
-    background-color: white;
-
-    height: 3rem;
-    position: relative;
-
-    display: flex;
-    align-items: center;
-
-    transition: all ease-out 0.5s;
-}
-
 .task {
     margin-bottom: 0.5rem;
     /* padding: 0.8rem; */
@@ -100,11 +88,29 @@ input[type="text"] {
     cursor: pointer;
 }
 
+.main-bottom-container {
+    display: flex;
+}
+
+.new-task-container {
+    width: 85%;
+    border-radius: 0.4rem;
+    background-color: white;
+
+    height: 3rem;
+    position: relative;
+
+    display: flex;
+    align-items: center;
+
+    transition: all ease-out 0.5s;
+}
+
 #new-task-input {
     position: relative;
     left: 5%;
     height: 90%;
-    width: 90%;
+    width: 80%;
 
     border: 0;
     outline: 0;
@@ -137,6 +143,41 @@ input[type="text"] {
     cursor: pointer;
 }
 
+.reset-button-container {
+    width: 12%;
+    margin-left: 3%;
+
+    border-radius: 0.3rem;
+    overflow: hidden;
+}
+
+#reset-button {
+    border: none;
+    width: 100%;
+    height: 100%;
+    background-color: white;
+
+    border-radius: 0.3rem;
+    border: 0.15rem solid white;
+
+    transition: all ease 0.5s;
+
+    font-size: 0.8rem;
+}
+#reset-button:hover {
+    cursor: pointer;
+
+    background-color: #f2aca7;
+    border: 0.15rem solid red;
+    transition: all ease-out 0.5s;
+}
+
 footer {
     margin-top: 1rem;
+}
+
+@media screen and (max-width: 30rem) {
+    html {
+        font-size: 10px;
+    }
 }
