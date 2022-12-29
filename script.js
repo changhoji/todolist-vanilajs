@@ -4,8 +4,9 @@ const taskList = document.querySelector(".tasks");
 
 let savedTasks = [];
 const taskLocalStorage = "tasks";
+const timestampLocalStorage = "timestamp";
 
-let cnt = 0;
+let lastTimestamp = 0;
 
 newTaskInput.onfocus = (e) => {
     const focusColor = "#CCD0E5";
@@ -23,7 +24,7 @@ function saveTasks() {
     localStorage.setItem("tasks", JSON.stringify(savedTasks));
 }
 
-function loadTasks() {
+function loadLocalStorage() {
     const loadedTasks = localStorage.getItem(taskLocalStorage);
     console.log("load: " + loadedTasks);
     if (loadedTasks !== null) {
@@ -34,7 +35,7 @@ function loadTasks() {
     }
 }
 
-loadTasks();
+loadLocalTasks();
 
 /**
  *
