@@ -215,6 +215,7 @@ function addTask(taskObj) {
 function clearStorage() {
     console.log("cleared");
     window.localStorage.clear();
+    location.reload();
 }
 
 function placeTask(taskList, tasks, task, check) {
