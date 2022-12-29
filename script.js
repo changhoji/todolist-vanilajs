@@ -32,7 +32,6 @@ function loadLocalStorage() {
     }
 
     const loadedTasks = localStorage.getItem(taskLocalStorage);
-    console.log("load: " + loadedTasks);
     if (loadedTasks !== null) {
         savedTasks = JSON.parse(loadedTasks);
         savedTasks.forEach((taskObj) => {
@@ -67,7 +66,6 @@ function inputNewTask() {
  * html에 todo 항목 추가하는 함수
  */
 function addTask(taskObj) {
-    console.log("add: " + taskObj);
     let task = document.createElement("div"); //task이름
     task.className = "task";
     task.setAttribute("data-timestamp", taskObj.timestamp);
@@ -163,6 +161,16 @@ function addTask(taskObj) {
             editInput.value = "";
             if (newTaskName !== "") {
                 taskName.innerHTML = newTaskName;
+
+                //reflect to localStorage
+                const toEditTimestamp = Number(task.dataset.timestamp);
+                for (let i = 0; i < savedTasks.length; i++) {
+                    if (toEditTimestamp === savedTasks[i].timestamp) {
+                        savedTasks[i].taskName = newTaskName;
+                        break;
+                    }
+                }
+                saveTasks();
             }
 
             editInput.style.display = "none";
@@ -182,20 +190,9 @@ function addTask(taskObj) {
 
     //when click "remove"
     removeBtn.addEventListener("click", () => {
-        const toDeleteTimestamp = task.dataset.timestamp;
+        const toDeleteTimestamp = Number(task.dataset.timestamp);
         for (let i = 0; i < savedTasks.length; i++) {
-            console.log("i = " + i);
-            console.log(
-                "toDeleteTimestamp = " +
-                    typeof toDeleteTimestamp +
-                    toDeleteTimestamp +
-                    ", nowTimeStamp = " +
-                    typeof savedTasks[i].timestamp +
-                    savedTasks[i].timestamp
-            );
-            if (savedTasks[i].timestamp === Number(toDeleteTimestamp)) {
-                console.log("found!");
-                console.log(savedTasks[i]);
+            if (savedTasks[i].timestamp === toDeleteTimestamp) {
                 savedTasks.splice(i, 1);
                 i--;
             }
