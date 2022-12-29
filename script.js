@@ -182,7 +182,26 @@ function addTask(taskObj) {
 
     //when click "remove"
     removeBtn.addEventListener("click", () => {
+        const toDeleteTimestamp = task.dataset.timestamp;
+        for (let i = 0; i < savedTasks.length; i++) {
+            console.log("i = " + i);
+            console.log(
+                "toDeleteTimestamp = " +
+                    typeof toDeleteTimestamp +
+                    toDeleteTimestamp +
+                    ", nowTimeStamp = " +
+                    typeof savedTasks[i].timestamp +
+                    savedTasks[i].timestamp
+            );
+            if (savedTasks[i].timestamp === Number(toDeleteTimestamp)) {
+                console.log("found!");
+                console.log(savedTasks[i]);
+                savedTasks.splice(i, 1);
+                i--;
+            }
+        }
         task.remove();
+        saveTasks();
     });
 
     taskList.prepend(task);
