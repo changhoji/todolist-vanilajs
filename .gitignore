@@ -1,2 +1,6 @@
 key*
+<<<<<<< HEAD
 node_modules/
+=======
+.env
+>>>>>>> vanila-js
