@@ -21,10 +21,16 @@ newTaskInput.onblur = (e) => {
 
 function saveTasks() {
     console.log("save!");
+    localStorage.setItem(timestampLocalStorage, JSON.stringify(lastTimestamp));
     localStorage.setItem("tasks", JSON.stringify(savedTasks));
 }
 
 function loadLocalStorage() {
+    const loadedTimestamp = localStorage.getItem(timestampLocalStorage);
+    if (loadedTimestamp !== null) {
+        lastTimestamp = Number(loadedTimestamp);
+    }
+
     const loadedTasks = localStorage.getItem(taskLocalStorage);
     console.log("load: " + loadedTasks);
     if (loadedTasks !== null) {
@@ -35,7 +41,7 @@ function loadLocalStorage() {
     }
 }
 
-loadLocalTasks();
+loadLocalStorage();
 
 /**
  *
@@ -48,7 +54,7 @@ function inputNewTask() {
 
     let newTask = {
         taskName: newTaskName,
-        timestamp: Date(),
+        timestamp: ++lastTimestamp,
     };
 
     savedTasks.push(newTask);
