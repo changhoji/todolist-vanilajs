@@ -188,7 +188,7 @@ function addTask(taskObj) {
     placeTask(taskList, taskList.childNodes, task, taskObj.check);
 }
 
-function s() {
+function clearStorage() {
     console.log("cleared");
     window.localStorage.clear();
     location.reload();
