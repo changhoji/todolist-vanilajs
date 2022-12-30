@@ -66,6 +66,7 @@ function inputNewTask() {
  * html에 todo 항목 추가하는 함수
  */
 function addTask(taskObj) {
+    const focusColor = "#CCD0E5";
     let task = document.createElement("div"); //task이름
     task.className = "task";
     task.setAttribute("data-timestamp", taskObj.timestamp);
@@ -73,6 +74,7 @@ function addTask(taskObj) {
     //taskname
     let taskName = document.createElement("p");
     taskName.className = "task-name";
+    taskName.setAttribute("contenteditable", "true");
     taskName.appendChild(document.createTextNode(taskObj.taskName));
     task.appendChild(taskName);
 
@@ -90,27 +92,52 @@ function addTask(taskObj) {
         task.style.backgroundColor = "#B0B9C6";
     }
 
-    //edit button
-    let editBtn = document.createElement("img");
-    editBtn.className = "task-edit task-button";
-    editBtn.setAttribute("src", "./svg/pencil-square.svg");
-    task.appendChild(editBtn);
-
-    //edit input
-    let editInput = document.createElement("input");
-    editInput.setAttribute("type", "text");
-    editInput.className = "task-edit-input";
-    task.prepend(editInput);
-
     //remove button
     let removeBtn = document.createElement("img");
     removeBtn.className = "task-remove task-button";
     removeBtn.setAttribute("src", "./svg/x-square.svg");
     task.appendChild(removeBtn);
 
+    //for contenteditable task-name
+    let beforeTaskName = taskObj.text;
+
+    taskName.addEventListener("focus", (e) => {
+        task.style.backgroundColor = focusColor;
+        console.log("e");
+        beforeTaskName = taskName.innerText;
+    });
+
+    taskName.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            taskName.blur();
+        }
+    });
+
+    taskName.addEventListener("blur", (e) => {
+        const newTaskName = taskName.innerHTML;
+        task.style.backgroundColor = checkBtn.classList.contains("checked")
+            ? "#B0B9C6"
+            : "";
+        if (newTaskName === "") {
+            //되돌리기
+            taskName.innerHTML = beforeTaskName;
+            return;
+        }
+        if (newTaskName === beforeTaskName) return;
+
+        const toEditTimestamp = Number(task.dataset.timestamp);
+        for (let i = 0; i < savedTasks.length; i++) {
+            if (toEditTimestamp === savedTasks[i].timestamp) {
+                savedTasks[i].taskName = newTaskName;
+                saveTasks();
+                break;
+            }
+        }
+    });
+
     //when click "check"
     checkBtn.addEventListener("click", () => {
-        if (editInput.style.display === "inline") return;
         const tasks = taskList.childNodes;
         if (checkBtn.classList.contains("unchecked")) {
             task.style.backgroundColor = "#B0B9C6";
@@ -144,55 +171,6 @@ function addTask(taskObj) {
         saveTasks();
     });
 
-    //when click "edit"
-    editBtn.addEventListener("click", () => {
-        if (checkBtn.classList.contains("checked")) return;
-        const beforeTaskName =
-            task.getElementsByClassName("task-name")[0].innerHTML;
-
-        //modify displays
-        taskName.style.display = "none";
-        editInput.style.display = "inline";
-
-        editInput.setAttribute("placeholder", beforeTaskName);
-
-        //add input element
-
-        //아래 두 eventlistener에 대한 함수
-        function doEditTask(e) {
-            if (editInput.style.display === "none") return;
-
-            const newTaskName = editInput.value;
-            editInput.value = "";
-            if (newTaskName !== "") {
-                taskName.innerHTML = newTaskName;
-
-                //reflect to localStorage
-                const toEditTimestamp = Number(task.dataset.timestamp);
-                for (let i = 0; i < savedTasks.length; i++) {
-                    if (toEditTimestamp === savedTasks[i].timestamp) {
-                        savedTasks[i].taskName = newTaskName;
-                        break;
-                    }
-                }
-                saveTasks();
-            }
-
-            editInput.style.display = "none";
-            taskName.style.display = "";
-        }
-
-        //add input element's eventlisteners
-        editInput.addEventListener("keyup", (e) => {
-            if (e.key === "Enter") doEditTask(e);
-        });
-        editInput.addEventListener("blur", (e) => {
-            doEditTask(e);
-        });
-
-        editInput.focus();
-    });
-
     //when click "remove"
     removeBtn.addEventListener("click", () => {
         const toDeleteTimestamp = Number(task.dataset.timestamp);
@@ -208,18 +186,15 @@ function addTask(taskObj) {
 
     //taskList.prepend(task); -> placeTask()로 대체..!
     placeTask(taskList, taskList.childNodes, task, taskObj.check);
-
-    //localstorage에 저장
 }
 
-function clearStorage() {
+function s() {
     console.log("cleared");
     window.localStorage.clear();
     location.reload();
 }
 
 function placeTask(taskList, tasks, task, check) {
-    console.log("task = " + task.dataset.timestamp + ", check = " + check);
     let i = 0;
 
     if (check === "unchecked") {
@@ -231,7 +206,6 @@ function placeTask(taskList, tasks, task, check) {
             )
                 break;
         }
-        console.log("i = " + i);
         if (i === tasks.length) taskList.insertBefore(task, null);
         else {
             taskList.insertBefore(task, tasks[i]);
@@ -246,7 +220,6 @@ function placeTask(taskList, tasks, task, check) {
             )
                 break;
         }
-        console.log("i = " + i);
         if (i === tasks.length) taskList.insertBefore(task, null);
         else {
             taskList.insertBefore(task, tasks[i]);

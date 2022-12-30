@@ -65,7 +65,13 @@ input[type="text"] {
 
 .task-name {
     margin-left: 1rem;
-    width: 15.6rem;
+    width: 17.5rem;
+    /* overflow: hidden; */
+}
+
+.task-name:focus {
+    outline: none;
+    border: none;
 }
 
 .task-edit-input {
